@@ -1,5 +1,5 @@
 
-resource "null_resource" "install_kind" {
+resource "null_resource" "install_k3d" {
   provisioner "local-exec" {
     command = <<EOT
       # Define color variables
@@ -16,7 +16,7 @@ resource "null_resource" "install_kind" {
       echo -e "$INFO_COLOR Architecture detected:$RESET_COLOR $SUCCESS_COLOR $ARCH$RESET_COLOR"
 
       if [[ "$OS" == "windows"* ]]; then
-        echo -e "$ERROR_COLOR This script does not support Windows. Please install Docker and Kind manually.$RESET_COLOR"
+        echo -e "$ERROR_COLOR This script does not support Windows. Please install Docker and k3d manually.$RESET_COLOR"
         exit 1
       fi
 
@@ -62,7 +62,7 @@ resource "null_resource" "install_kind" {
         echo -e "$INFO_COLOR K3D not found. Installing...$RESET_COLOR"
         wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
       else
-        echo -e "$SUCCESS_COLOR Kind is installed.$RESET_COLOR"
+        echo -e "$SUCCESS_COLOR k3d is installed.$RESET_COLOR"
       fi
     EOT
     interpreter = ["bash", "-c"]
@@ -130,7 +130,7 @@ resource "null_resource" "get_kubeconfig" {
   depends_on = [k3d_cluster.create_cluster,null_resource.cluster_ready_check]
 
   provisioner "local-exec" {
-    command = "k3d kubeconfig get ${var.K3D_CLUSTER_NAME} > ${path.module}/kind-config"
+    command = "k3d kubeconfig get ${var.K3D_CLUSTER_NAME} > ${path.module}/k3d-config"
   }
 
   provisioner "local-exec" {
@@ -141,16 +141,16 @@ resource "null_resource" "get_kubeconfig" {
       INFO_COLOR="\e[36m"
       RESET_COLOR="\e[0m"
 
-      until [ -f "${path.module}/kind-config" ]; do
-        echo -e "$INFO_COLOR Waiting for kind-config be ready...$RESET_COLOR"
+      until [ -f "${path.module}/k3d-config" ]; do
+        echo -e "$INFO_COLOR Waiting for k3d-config be ready...$RESET_COLOR"
         sleep 2
       done
-      echo -e "$SUCCESS_COLOR kind-config is ready...$RESET_COLOR"
+      echo -e "$SUCCESS_COLOR k3d-config is ready...$RESET_COLOR"
     EOT
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "rm -f ${path.module}/kind-config"
+    command = "rm -f ${path.module}/k3d-config"
   }
 }
