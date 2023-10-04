@@ -36,7 +36,10 @@ Additional parameters like NODE_IMAGE,API_HOST_IP,API_HOST_PORT and WAIT_FOR_REA
 
 This module has the following outputs:
 
-    kubeconfig: The kubeconfig for the created cluster.
+    client_key: The client key for the created cluster. This is used to authenticate with the cluster.
+    ca: The Certificate Authority (CA) certificate for the created cluster. This is used to validate the server certificate.
+    crt: The client certificate for the created cluster. This is used along with the client key to authenticate with the cluster.
+    endpoint: The endpoint (API server URL) for the created cluster. This is used to communicate with the cluster.
 
 ## Example
 Define your variables:
@@ -60,7 +63,7 @@ variable "NUM_WORKERS" {
 ## Use the module with the defined variables:
 ```hcl
 module "k3d_cluster" {
-  source            = "github.com/bartaadalbert/tf-k3d-cluster?ref=kubeconfig"
+  source            = "github.com/bartaadalbert/tf-k3d-cluster?ref=cert"
   K3D_CLUSTER_NAME  = var.K3D_CLUSTER_NAME
   NUM_MASTERS       = var.NUM_MASTERS
   NUM_WORKERS       = var.NUM_WORKERS
