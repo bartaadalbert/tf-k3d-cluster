@@ -153,4 +153,13 @@ resource "null_resource" "get_kubeconfig" {
     when    = destroy
     command = "rm -f ${path.module}/k3d-config"
   }
+   
+  triggers = {
+    cluster_name = var.K3D_CLUSTER_NAME
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "kubectl config delete-context k3d-${self.triggers.cluster_name}"
+  }
 }
