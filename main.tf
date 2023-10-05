@@ -151,7 +151,7 @@ resource "null_resource" "get_kubeconfig" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "rm -f ${path.module}/k3d-config"
+    command = "rm -f ${path.module}/k3d-*"
   }
 
   triggers = {
