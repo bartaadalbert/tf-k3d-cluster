@@ -174,7 +174,7 @@ resource "null_resource" "extract_kubeconfig_values" {
       ERROR_COLOR="\e[31m"
       RESET_COLOR="\e[0m"
 
-      if k3d clusters get | grep -q "${var.K3D_CLUSTER_NAME}"; then
+      if k3d cluster get | grep -q "${var.K3D_CLUSTER_NAME}"; then
         if [ -f "${path.module}/k3d-config" ]; then
           KUBECONFIG=${path.module}/k3d-config kubectl config use-context k3d-${var.K3D_CLUSTER_NAME} &&
           KUBECONFIG=${path.module}/k3d-config kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' | base64 --decode > ${path.module}/k3d-ca.crt &&
