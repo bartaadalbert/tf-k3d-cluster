@@ -80,12 +80,20 @@ resource "k3d_cluster" "create_cluster" {
         host_port    = var.API_HOST_PORT
     }
     
-    ports {
-      host_port      = 8080
-      container_port = 80
-      node_filters = [
-        "loadbalancer",
-      ]
+    # ports {
+    #   host_port      = 8080
+    #   container_port = 80
+    #   node_filters = [
+    #     "loadbalancer",
+    #   ]
+    # }
+    dynamic "ports" {
+      for_each = var.port_mappings
+      content {
+        host_port      = ports.value.host_port
+        container_port = ports.value.container_port
+        node_filters   = ["loadbalancer"]
+      }
     }
 
     k3d_options {

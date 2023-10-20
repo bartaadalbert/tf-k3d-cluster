@@ -40,3 +40,19 @@ variable "WAIT_FOR_READY" {
   default     = true
 }
 
+variable "port_mappings" {
+  description = "List of port mappings"
+  type = list(object({
+    host_port      = number
+    container_port = number
+  }))
+  default = [
+    {
+      host_port      = 8080
+      container_port = 80
+    },
+    # ... any other port mappings ...
+  ]
+}
+
+
