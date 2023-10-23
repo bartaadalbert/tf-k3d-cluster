@@ -48,9 +48,14 @@ variable "port_mappings" {
   }))
   default = [
     {
-      host_port      = 8080
+      host_port      = 80
       container_port = 80
     },
+    ,
+    {
+      host_port      = 443
+      container_port = 443
+    }
     # ... any other port mappings ...
   ]
 }
